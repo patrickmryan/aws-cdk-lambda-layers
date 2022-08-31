@@ -19,8 +19,11 @@ export class CdkStarterStack extends cdk.Stack {
     });
 
     const opts = '--disable-pip-version-check --no-cache-dir'
-    const layer_dir = 'layers/skyfield'
-    const container_dir = '/install'
+    const layerDir = 'layers/skyfield'
+    const containerDir = '/install'
+
+    const pipCommand = 'pip install ' + opts + ' -r ' +
+      join(containerDir, '/requirements.txt') + ' -t /asset-output/python';
 
     const skyfieldLayer = new lambda.LayerVersion(this, 'skyfield-layer', {
       compatibleRuntimes: [lambda.Runtime.PYTHON_3_9],
@@ -29,23 +32,12 @@ export class CdkStarterStack extends cdk.Stack {
           image: new cdk.DockerImage('python:3.9-slim'), // lambda.Runtime.PYTHON_3_9.bundlingImage,
           volumes: [
             {
-              containerPath: container_dir,
-              hostPath: resolve(layer_dir),
-            }
-            // ),
+              containerPath: containerDir,
+              hostPath: resolve(layerDir),
+            },
           ],
-          // command: 'pip install'+opts+' -r '+container_dir +'/requirements.txt -t /asset-output/python',
-          command: [
-            'pip',
-            'install',
-            '--disable-pip-version-check',
-            '--no-cache-dir',
-            '-r',
-            join(container_dir, '/requirements.txt'),
-            '-t',
-            '/asset-output/python',
-          ],
-          network: 'host',
+          command: pipCommand.split(/\s+/),
+          // network: 'host',
         },
       }),
       description: 'skyfield',
