@@ -2,7 +2,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda';
 import {NodejsFunction} from 'aws-cdk-lib/aws-lambda-nodejs';
 import * as cdk from 'aws-cdk-lib';
 import * as path from 'path';
-import { join, resolve } from 'path';
+import {join, resolve} from 'path';
 
 export class CdkStarterStack extends cdk.Stack {
   constructor(scope: cdk.App, id: string, props?: cdk.StackProps) {
@@ -31,8 +31,6 @@ export class CdkStarterStack extends cdk.Stack {
             {
               containerPath: container_dir,
               hostPath: resolve(layer_dir),
-                // '/Users/pmryan/ec/projects/galactica/aws-cdk-lambda-layers/layers/skyfield',
-                // join(__dirname, layer_dir),
             }
             // ),
           ],
@@ -47,13 +45,11 @@ export class CdkStarterStack extends cdk.Stack {
             '-t',
             '/asset-output/python',
           ],
-          // network: 'host'
+          network: 'host',
         },
       }),
       description: 'skyfield',
-
-      });
-
+    });
 
     // 👇 3rd party library layer
     const yupLayer = new lambda.LayerVersion(this, 'yup-layer', {
