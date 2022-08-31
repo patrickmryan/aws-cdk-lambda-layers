@@ -22,8 +22,13 @@ export class CdkStarterStack extends cdk.Stack {
     const layerDir = 'layers/skyfield'
     const containerDir = '/install'
 
-    const pipCommand = 'pip install ' + opts + ' -r ' +
-      join(containerDir, '/requirements.txt') + ' -t /asset-output/python';
+    const pipCommand = [
+      'pip install ',
+      opts,
+      ' -r ',
+      containerDir,
+      '/requirements.txt -t /asset-output/python',
+    ].join('');
 
     const skyfieldLayer = new lambda.LayerVersion(this, 'skyfield-layer', {
       compatibleRuntimes: [lambda.Runtime.PYTHON_3_9],
